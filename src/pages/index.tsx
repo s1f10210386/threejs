@@ -1,13 +1,13 @@
 import type { NextPage } from "next";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 const Home: NextPage = () => {
-  let canvas: HTMLElement;
+  const canvasRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
-    if (canvas) return;
+    if (canvasRef.current) return;
     // canvasを取得
-    canvas = document.getElementById("canvas")!;
+    canvasRef.current = document.getElementById("canvas")!;
 
     // シーン
     const scene = new THREE.Scene();
@@ -28,7 +28,7 @@ const Home: NextPage = () => {
 
     // レンダラー
     const renderer = new THREE.WebGLRenderer({
-      canvas: canvas || undefined,
+      canvas: canvasRef.current || undefined,
       antialias: true,
       alpha: true,
     });
@@ -38,7 +38,7 @@ const Home: NextPage = () => {
     // ボックスジオメトリー
     const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
     const boxMaterial = new THREE.MeshLambertMaterial({
-      color: "#2497f0",
+      color: "ffffff",
     });
     const box = new THREE.Mesh(boxGeometry, boxMaterial);
     box.position.z = -5;
