@@ -14,8 +14,8 @@ const Home: NextPage = () => {
 
     // サイズ
     const sizes = {
-      width: innerWidth,
-      height: innerHeight,
+      width: window.innerWidth,
+      height: window.innerHeight,
     };
 
     // カメラ
@@ -75,7 +75,19 @@ const Home: NextPage = () => {
   }, []);
   return (
     <>
-      <canvas id="canvas"></canvas>
+      <div
+        style={{
+          display: "flex",
+          height: "100vh",
+          width: "100vw",
+          overflow: "hidden",
+        }}
+      >
+        <div className="flex text-blue-500 items-center">
+          Hello!I`m Hotaka Kanazawa!
+        </div>
+        <canvas id="canvas"></canvas>
+      </div>
     </>
   );
 };
