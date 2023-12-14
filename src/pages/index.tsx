@@ -36,7 +36,7 @@ const Home: NextPage = () => {
     renderer.setPixelRatio(window.devicePixelRatio);
 
     // ボックスジオメトリー
-    const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+    const boxGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
     const boxMaterial = new THREE.MeshLambertMaterial({
       color: "ffffff",
     });
@@ -52,15 +52,40 @@ const Home: NextPage = () => {
     pointLight.position.set(1, 2, 3);
     scene.add(pointLight);
 
-    // アニメーション
     const clock = new THREE.Clock();
+    let destination = new THREE.Vector3();
+    let lastUpdateTime = 0;
+    let updateInterval = 2; // 2秒ごとに目的地を更新する
+    let lerpFactor = 0.01; // 補間係数を小さくすることで移動速度をゆっくりにする
+
+    // 移動範囲の設定（例: X, Y, Z軸それぞれについて -50 から 50 の範囲）
+    const movementRange = { x: 1, y: 1, z: -1 };
+
+    const updateDestination = () => {
+      destination.set(
+        (Math.random() - 0.5) * movementRange.x, // X座標
+        (Math.random() - 0.5) * movementRange.y, // Y座標
+        (Math.random() - 0.5) * movementRange.z // Z座標
+      );
+    };
+
     const tick = () => {
       const elapsedTime = clock.getElapsedTime();
-      box.rotation.x = elapsedTime;
-      box.rotation.y = elapsedTime;
+
+      // 一定間隔で新しい目的地をランダムに生成
+      if (elapsedTime - lastUpdateTime > updateInterval) {
+        updateDestination();
+        lastUpdateTime = elapsedTime;
+      }
+
+      // 目的地に向かってゆっくりとオブジェクトを動かす
+      box.position.lerp(destination, lerpFactor);
+
       window.requestAnimationFrame(tick);
       renderer.render(scene, camera);
     };
+
+    updateDestination(); // 初期目的地を設定
     tick();
 
     // ブラウザのリサイズ処理
